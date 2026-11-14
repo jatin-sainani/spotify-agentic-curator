@@ -1,0 +1,68 @@
+# Large dataset files
+*.csv
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Cache
+.cache/
+.cache/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Offline catalog index (derived from Spotify metadata + lyrics; never commit)
+data/
+
+# Synthetic test fixtures are fine to commit
+!tests/fixtures/*.csv
+
+# Draft exports (curate output)
+exports/
+
+# Human label sheets are hand-written eval data
+!evals/human_labels/*.csv
+
+# Runtime drafts (user data)
+app/drafts/

@@ -1,0 +1,14 @@
+{
+  "name": "hiphop_rnb",
+  "description": "Hip-hop and neo-soul / R&B listener.",
+  "seed_artists": [
+    "Kendrick Lamar",
+    "J. Cole",
+    "Drake",
+    "Kanye West",
+    "SZA",
+    "Erykah Badu",
+    "D'Angelo"
+  ],
+  "seed_track_ids": []
+}

@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # No LLM in CI: point Ollama at a closed port so every LLM step takes its
+      # fallback path, and use the committed synthetic catalog (no real data).
+      OLLAMA_BASE_URL: http://127.0.0.1:9
+      CATALOG_PATH: tests/fixtures/catalog_synthetic.csv
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install
+        run: pip install -e ".[dev]"
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Tests (LLM always mocked; includes an MCP stdio round-trip)
+        run: pytest -q
+
+      - name: Smoke eval (heuristic configs, offline fallbacks)
+        run: |
+          python -m app eval run -n ci_smoke --limit 7 \
+            -c baseline,baseline_fit,baseline_adaptive --no-judge
+          python -m app eval report ci_smoke > /dev/null
+          test -s evals/results/ci_smoke.md
+
+      - name: Upload smoke report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-smoke-eval
+          path: evals/results/ci_smoke.*

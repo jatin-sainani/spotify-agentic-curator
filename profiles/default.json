@@ -1,0 +1,15 @@
+{
+  "name": "default",
+  "description": "Indie / alt-rock listener with folk and electronic leanings.",
+  "seed_artists": [
+    "Radiohead",
+    "Arctic Monkeys",
+    "Tame Impala",
+    "Fleetwood Mac",
+    "The National",
+    "Sufjan Stevens",
+    "Fleet Foxes",
+    "Daft Punk"
+  ],
+  "seed_track_ids": []
+}

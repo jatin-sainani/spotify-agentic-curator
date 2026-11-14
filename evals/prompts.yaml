@@ -1,0 +1,305 @@
+# Gold prompt set for playlist-curation evaluation.
+#
+# Each prompt carries hand-written expectations that are independent of the
+# system's own intent parser, so deterministic metrics measure the whole
+# pipeline (parse -> retrieve -> rank) against what a human meant:
+#
+#   genres_any:  a track "hits" if any of its genre labels contains one of these
+#   avoid:       genre/title keywords that should NOT appear (negative constraints)
+#   era:         [first_year, last_year] the request implies
+#   targets:     audio-feature ranges the request implies (0-1; tempo in BPM)
+#   arc:         expected energy shape across the playlist: build | cooldown | peak | wave
+#   profile:     offline listener profile (profiles/<name>.json)
+#
+# Fields are optional; a metric is only computed for prompts that define it.
+# Genre keywords were checked against the catalog so every target is achievable.
+
+defaults:
+  length: 15
+  profile: default
+
+prompts:
+  # --- mood ----------------------------------------------------------------
+  - id: mood-01
+    category: mood
+    prompt: sad songs for a breakup
+    targets: {valence: [0.0, 0.4]}
+  - id: mood-02
+    category: mood
+    prompt: happy feel-good songs to put me in a good mood
+    targets: {valence: [0.6, 1.0], energy: [0.5, 1.0]}
+  - id: mood-03
+    category: mood
+    prompt: dark and brooding music for a stormy night
+    targets: {valence: [0.0, 0.35]}
+  - id: mood-04
+    category: mood
+    prompt: calm, peaceful music to unwind after a long day
+    targets: {energy: [0.0, 0.45]}
+  - id: mood-05
+    category: mood
+    prompt: angry songs to scream along to
+    genres_any: [metal, punk, rock, rap]
+    targets: {energy: [0.75, 1.0], valence: [0.0, 0.5]}
+  - id: mood-06
+    category: mood
+    prompt: dreamy, hazy songs that feel like floating
+    genres_any: [dream pop, shoegaze, ambient, psychedelic]
+    targets: {energy: [0.0, 0.6]}
+  - id: mood-07
+    category: mood
+    prompt: nostalgic songs that feel like summer as a teenager
+    targets: {valence: [0.45, 1.0]}
+  - id: mood-08
+    category: mood
+    prompt: romantic slow songs for a candlelit dinner
+    genres_any: [soul, r&b, jazz, quiet storm]
+    targets: {energy: [0.0, 0.5]}
+  - id: mood-09
+    category: mood
+    prompt: hopeful, uplifting songs for a fresh start
+    targets: {valence: [0.5, 1.0]}
+  - id: mood-10
+    category: mood
+    prompt: lonely late-night songs, melancholic but beautiful
+    targets: {valence: [0.0, 0.4], energy: [0.0, 0.55]}
+
+  # --- activity ------------------------------------------------------------
+  - id: act-01
+    category: activity
+    prompt: high-intensity gym workout
+    targets: {energy: [0.75, 1.0], tempo: [115, 200]}
+  - id: act-02
+    category: activity
+    prompt: deep focus music for studying, no distracting vocals
+    genres_any: [classical, ambient, piano, jazz, lo-fi]
+    targets: {energy: [0.0, 0.5], instrumentalness: [0.5, 1.0]}
+  - id: act-03
+    category: activity
+    prompt: morning run, steady upbeat pace
+    targets: {energy: [0.65, 1.0], tempo: [140, 190]}
+  - id: act-04
+    category: activity
+    prompt: cooking dinner with friends, groovy and fun
+    genres_any: [funk, soul, disco, r&b]
+    targets: {valence: [0.55, 1.0], danceability: [0.6, 1.0]}
+  - id: act-05
+    category: activity
+    prompt: falling asleep, very soft and slow
+    targets: {energy: [0.0, 0.3], tempo: [40, 105]}
+  - id: act-06
+    category: activity
+    prompt: house party dance floor bangers
+    genres_any: [house, edm, dance, disco, hip hop]
+    targets: {energy: [0.7, 1.0], danceability: [0.65, 1.0]}
+  - id: act-07
+    category: activity
+    prompt: long highway road trip singalongs
+    targets: {energy: [0.55, 1.0], valence: [0.45, 1.0]}
+  - id: act-08
+    category: activity
+    prompt: yoga and stretching, gentle and meditative
+    genres_any: [ambient, classical, new age, piano, folk]
+    targets: {energy: [0.0, 0.35]}
+  - id: act-09
+    category: activity
+    prompt: cleaning the house, energetic pop to keep me moving
+    genres_any: [pop]
+    targets: {energy: [0.65, 1.0]}
+  - id: act-10
+    category: activity
+    prompt: rainy afternoon reading in a coffee shop
+    genres_any: [jazz, folk, acoustic, bossa nova, singer-songwriter]
+    targets: {energy: [0.0, 0.5]}
+
+  # --- genre / era -----------------------------------------------------------
+  - id: genre-01
+    category: genre_era
+    prompt: 80s synth-pop and new wave classics
+    genres_any: [synthpop, new wave]
+    era: [1979, 1991]
+  - id: genre-02
+    category: genre_era
+    prompt: 90s grunge
+    genres_any: [grunge]
+    era: [1988, 2000]
+  - id: genre-03
+    category: genre_era
+    prompt: classic motown and 60s soul
+    genres_any: [motown, soul]
+    era: [1959, 1975]
+  - id: genre-04
+    category: genre_era
+    prompt: bossa nova for a lazy sunday
+    genres_any: [bossa nova]
+    targets: {energy: [0.0, 0.55]}
+  - id: genre-05
+    category: genre_era
+    prompt: 70s disco
+    genres_any: [disco]
+    era: [1972, 1983]
+  - id: genre-06
+    category: genre_era
+    prompt: modern k-pop hits
+    genres_any: [k-pop]
+    era: [2012, 2026]
+  - id: genre-07
+    category: genre_era
+    prompt: bluegrass and old-time string band music
+    genres_any: [bluegrass]
+  - id: genre-08
+    category: genre_era
+    prompt: 2000s emo and pop punk
+    genres_any: [emo, punk]
+    era: [1998, 2012]
+  - id: genre-09
+    category: genre_era
+    prompt: trip hop
+    genres_any: [trip hop]
+  - id: genre-10
+    category: genre_era
+    prompt: outlaw country
+    genres_any: [outlaw country, country]
+
+  # --- arc (sequencing) ------------------------------------------------------
+  - id: arc-01
+    category: arc
+    prompt: a workout that starts with a warmup, peaks hard in the middle, then cools down
+    arc: peak
+  - id: arc-02
+    category: arc
+    prompt: a dinner party playlist that starts mellow and builds into dancing
+    arc: build
+  - id: arc-03
+    category: arc
+    prompt: wind-down playlist that goes from upbeat to sleepy
+    arc: cooldown
+  - id: arc-04
+    category: arc
+    prompt: a 5k run that builds energy toward a sprint finish
+    arc: build
+    targets: {energy: [0.5, 1.0]}
+  - id: arc-05
+    category: arc
+    prompt: friday night pregame that keeps ramping up
+    arc: build
+  - id: arc-06
+    category: arc
+    prompt: sunday morning, start with coffee jazz and slowly wake up
+    arc: build
+    genres_any: [jazz, soul, folk, bossa nova]
+  - id: arc-07
+    category: arc
+    prompt: after-party comedown, loud to quiet
+    arc: cooldown
+  - id: arc-08
+    category: arc
+    prompt: a DJ-style set that rises, peaks, and lands softly
+    arc: peak
+    genres_any: [house, techno, edm, electronic, disco]
+
+  # --- nuanced / contradictory -------------------------------------------------
+  - id: nuance-01
+    category: nuanced
+    prompt: sad but danceable songs, crying on the dance floor
+    targets: {valence: [0.0, 0.45], danceability: [0.6, 1.0]}
+  - id: nuance-02
+    category: nuanced
+    prompt: chill hip hop with no explicit aggression
+    genres_any: [hip hop, rap, jazz rap, boom bap]
+    targets: {energy: [0.0, 0.65]}
+  - id: nuance-03
+    category: nuanced
+    prompt: upbeat songs but absolutely no christmas music
+    targets: {valence: [0.55, 1.0]}
+    avoid: [christmas]
+  - id: nuance-04
+    category: nuanced
+    prompt: acoustic folk, but nothing country
+    genres_any: [folk, acoustic, singer-songwriter]
+    avoid: [country]
+  - id: nuance-05
+    category: nuanced
+    prompt: heavy music that is still melodic, not just screaming
+    genres_any: [metal, rock]
+    targets: {energy: [0.7, 1.0]}
+  - id: nuance-06
+    category: nuanced
+    prompt: happy music for a rainy day that doesn't feel cheesy
+    targets: {valence: [0.5, 1.0]}
+  - id: nuance-07
+    category: nuanced
+    prompt: instrumental music that is energetic, not background
+    targets: {energy: [0.6, 1.0], instrumentalness: [0.5, 1.0]}
+  - id: nuance-08
+    category: nuanced
+    prompt: slow songs that are not depressing
+    targets: {energy: [0.0, 0.5], valence: [0.4, 1.0]}
+  - id: nuance-09
+    category: nuanced
+    prompt: rock without any metal
+    genres_any: [rock]
+    avoid: [metal]
+  - id: nuance-10
+    category: nuanced
+    prompt: party music with no rap
+    targets: {energy: [0.65, 1.0], danceability: [0.6, 1.0]}
+    avoid: [rap, hip hop]
+
+  # --- niche / long-tail ---------------------------------------------------------
+  - id: niche-01
+    category: niche
+    prompt: shoegaze with walls of guitar noise
+    genres_any: [shoegaze]
+  - id: niche-02
+    category: niche
+    prompt: afrobeat grooves
+    genres_any: [afrobeat, afro]
+  - id: niche-03
+    category: niche
+    prompt: yacht rock
+    genres_any: [yacht rock]
+    era: [1974, 1986]
+  - id: niche-04
+    category: niche
+    prompt: celtic folk with fiddles
+    genres_any: [celtic]
+  - id: niche-05
+    category: niche
+    prompt: new jack swing
+    genres_any: [new jack swing]
+    era: [1986, 1996]
+  - id: niche-06
+    category: niche
+    prompt: drum and bass
+    genres_any: [drum and bass]
+    targets: {tempo: [150, 190]}
+
+  # --- personalized ---------------------------------------------------------------
+  - id: pers-01
+    category: personalized
+    prompt: songs like my favorites but more relaxed
+    targets: {energy: [0.0, 0.55]}
+  - id: pers-02
+    category: personalized
+    prompt: introduce me to new artists similar to what I already like
+  - id: pers-03
+    category: personalized
+    prompt: my kind of music for a late-night drive
+  - id: pers-04
+    category: personalized
+    profile: hiphop_rnb
+    prompt: a sunday morning playlist in my style
+    genres_any: [hip hop, rap, r&b, soul, neo soul]
+  - id: pers-05
+    category: personalized
+    profile: hiphop_rnb
+    prompt: something for the gym that fits my taste
+    genres_any: [hip hop, rap, trap, r&b]
+    targets: {energy: [0.6, 1.0]}
+  - id: pers-06
+    category: personalized
+    profile: hiphop_rnb
+    prompt: slow jams for a quiet night in
+    genres_any: [r&b, soul, quiet storm, neo soul]
+    targets: {energy: [0.0, 0.55]}
